@@ -24,7 +24,7 @@ if host_machine.system() != 'windows'
     if meson.get_compiler( 'c' ).check_header( 'unistd.h' )
         export_args += '-DHAVE_UNISTD_H'
     endif
-    zlib_lib = library( 'z', name_prefix : 'lib', sources : sources, c_args : export_args, install : true )
+    zlib_lib = library( 'z', sources : sources, c_args : export_args, install : true )
 else
     export_args = [ '-DZLIB_DLL' ]
     import_args = [ '-DZLIB_DLL' ]

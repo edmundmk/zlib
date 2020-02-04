@@ -32,5 +32,6 @@ else
     zlib_lib = library( 'zlib1', sources : sources, c_args : export_args, install : true )
 endif
 
+zlib_lic = files( 'LICENSE' )
 zlib_dep = declare_dependency( include_directories : include_directories( '.' ), compile_args : import_args, link_with : zlib_lib )
 install_headers( 'zconf.h', 'zlib.h' )

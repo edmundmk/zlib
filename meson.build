@@ -18,20 +18,27 @@ sources = [
     'zutil.c'
 ]
 
+c_args = []
+dep_args = []
+
 if host_machine.system() != 'windows'
-    export_args = [ '-DHAVE_HIDDEN' ]
-    import_args = []
+    c_args += '-DHAVE_HIDDEN'
     if meson.get_compiler( 'c' ).check_header( 'unistd.h' )
-        export_args += '-DHAVE_UNISTD_H'
+        c_args += '-DHAVE_UNISTD_H'
     endif
-    zlib_lib = library( 'z', sources : sources, c_args : export_args, install : true )
+    libname = 'z'
 else
-    export_args = [ '-DZLIB_DLL' ]
-    import_args = [ '-DZLIB_DLL' ]
+    c_args += '-DZLIB_DLL'
+    dep_args += '-DZLIB_DLL'
     sources += import( 'windows' ).compile_resources( 'win32/zlib1.rc' )
-    zlib_lib = library( 'zlib1', sources : sources, c_args : export_args, install : true )
+    libname = 'zlib1'
 endif
 
+if meson.is_subproject() and get_option( 'buildtype' ) == 'debug'
+    c_args += '-O2'
+endif
+
+zlib_lib = library( libname, sources : sources, c_args : c_args, install : true )
 zlib_lic = files( 'LICENSE' )
-zlib_dep = declare_dependency( include_directories : include_directories( '.' ), compile_args : import_args, link_with : zlib_lib )
+zlib_dep = declare_dependency( include_directories : include_directories( '.' ), compile_args : dep_args, link_with : zlib_lib )
 install_headers( 'zconf.h', 'zlib.h' )

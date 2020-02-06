@@ -34,10 +34,6 @@ else
     libname = 'zlib1'
 endif
 
-if meson.is_subproject() and get_option( 'buildtype' ) == 'debug'
-    c_args += '-O2'
-endif
-
 zlib_lib = library( libname, sources : sources, c_args : c_args, install : true )
 zlib_lic = files( 'LICENSE' )
 zlib_dep = declare_dependency( include_directories : include_directories( '.' ), compile_args : dep_args, link_with : zlib_lib )
